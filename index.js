@@ -13,12 +13,13 @@ const videoApiKey = "AIzaSyBba0KfGoyDax9w-rzGM8KEmFSNQqSM4rk";
 
 //function to get news related to cocktails
 function getNews() {
-  const options = {
-    headers: new Headers({
-      "X-Api-Key": newsApiKey
-    })
-  };
-  fetch(newsUrl, options)
+  const url = `${newsUrl}&apiKey=${newsApiKey}`
+  // const options = {
+  //   headers: new Headers({
+  //     "X-Api-Key": newsApiKey
+  //   })
+  // };
+  fetch(url)
     .then(response => {
       if (response.ok) {
         return response.json();
