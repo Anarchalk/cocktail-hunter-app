@@ -7,6 +7,10 @@ const newsUrl =
 const videosUrl = "https://www.googleapis.com/youtube/v3/search";
 const videoApiKey = "AIzaSyBba0KfGoyDax9w-rzGM8KEmFSNQqSM4rk";
 
+
+
+
+
 //function to get news related to cocktails
 function getNews() {
   const options = {
