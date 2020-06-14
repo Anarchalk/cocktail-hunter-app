@@ -1,50 +1,54 @@
 "use strict";
 
+const placeholder = "../img/cocktail.png";
 const searchUrl = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=";
-const newsApiKey = "4c7b0c19e9d74afe982d773604074e2f";
-const newsUrl =
-  "https://newsapi.org/v2/everything?q=cocktail&language=en&pageSize=5";
+
+const gNewsApiKey = "bc028917a1a4fb538af6454f0a64dd75";
+const gNewsEndPoint = "https://gnews.io/api/v3/search";
+
 const videosUrl = "https://www.googleapis.com/youtube/v3/search";
 const videoApiKey = "AIzaSyBba0KfGoyDax9w-rzGM8KEmFSNQqSM4rk";
 
-
-
-
-
 //function to get news related to cocktails
-function getNews() {
-  const url = `${newsUrl}&apiKey=${newsApiKey}`
-  // const options = {
-  //   headers: new Headers({
-  //     "X-Api-Key": newsApiKey
-  //   })
-  // };
+function getNews(searchTerm) {
+  const url = `${gNewsEndPoint}?q=${searchTerm}&token=${gNewsApiKey}`;
+//  displayNews(responseJson)
   fetch(url)
-    .then(response => {
+    .then((response) => {
       if (response.ok) {
+        console.log(response);
         return response.json();
       }
       throw new Error(response.statusText);
     })
-    .then(responseJson => displayNews(responseJson))
-    .catch(err => {
+    .then((responseJson) => {
+      console.log({ responseJson });
+      displayNews(responseJson);
+    })
+    .catch((err) => {
       $("#js-error-message").text(
-        `Something went wrong, Please try again: ${err.message}`
+        `Something went wrong news, Please try again: ${err.message}`
       );
     });
 }
 
 //function to display news
 function displayNews(responseJson) {
+  console.log(responseJson);
   $("#results3").empty();
   for (let i = 0; i < responseJson.articles.length; i++) {
     $("#results3").append(
       `<div class="newsBox">
-         <ul class = nResults>
-             <li><h4><a href="${responseJson.articles[i].url}"target="_blank">${responseJson.articles[i].title}</a></h4>
+         <ul class="nResults">
+             <li><h4><a href="${responseJson.articles[i].url}"target="_blank">${
+        responseJson.articles[i].title
+      }</a></h4>
                 <p class = "lineh">${responseJson.articles[i].source.name}</p>
-                <p class= "lineh">By ${responseJson.articles[i].author}</p>
-                <p><img src='${responseJson.articles[i].urlToImage}' id="imgart" alt="${responseJson.articles[i].title}" height ="100" width= "100">${responseJson.articles[i].description}</p>
+                
+                <img src='${
+                  responseJson.articles[i].image || placeholder
+                }' id="imgart" alt="${responseJson.articles[i].title}" />
+                <p>${responseJson.articles[i].description}</p>
            </li>
         </ul>
       </div>`
@@ -55,7 +59,7 @@ function displayNews(responseJson) {
 //format the data
 function formatQueryParams(params) {
   const queryItems = Object.keys(params).map(
-    key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
+    (key) => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
   );
   return queryItems.join("&");
 }
@@ -128,14 +132,14 @@ function getRecipe(searchTerm) {
   const recipeSearch = searchUrl + searchTerm;
   // console.log(recipeSearch);
   fetch(recipeSearch)
-    .then(response => {
+    .then((response) => {
       if (response.ok) {
         return response.json();
       }
       throw new Error(response.statusText);
     })
-    .then(responseJson => displayResults(responseJson))
-    .catch(err => {
+    .then((responseJson) => displayResults(responseJson))
+    .catch((err) => {
       $("#js-error-message").text(
         `No matches found. Please try searching again: ${err.message}`
       );
@@ -179,20 +183,20 @@ function getVideos(searchTerm) {
     maxResults: 5,
     q: `${"How to make a cocktail"}` + searchTerm,
     relevanceLanguage: "en",
-    key: videoApiKey
+    key: videoApiKey,
   };
   const queryString = formatQueryParams(params);
   const urlYoutube = videosUrl + "?" + queryString;
 
   fetch(urlYoutube)
-    .then(response => {
+    .then((response) => {
       if (response.ok) {
         return response.json();
       }
       throw new Error(response.statusText);
     })
-    .then(responseJson => displayVideos(responseJson))
-    .catch(err => {
+    .then((responseJson) => displayVideos(responseJson))
+    .catch((err) => {
       $("#js-error-message").text(
         `No matches found. Please try searching again: ${err.message}`
       );
@@ -200,16 +204,15 @@ function getVideos(searchTerm) {
 }
 
 //Get the button
-const mybutton = document.getElementById("myBtn");
+let mybutton = document.getElementById("myBtn");
 
 // When the user scrolls down 20px from the top of the document, show the button
-window.onscroll = function() {
-  scrollFunction();
-};
+window.onscroll = function() {scrollFunction()};
 
 function scrollFunction() {
   if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
     mybutton.style.display = "block";
+    mybutton.addEventListener('click', topFunction)
   } else {
     mybutton.style.display = "none";
   }
@@ -223,7 +226,8 @@ function topFunction() {
 
 //event listener
 function watchForm() {
-  $("form").submit(event => {
+  //  $('#myBtn').topFunction()
+  $("form").submit((event) => {
     event.preventDefault();
     $("#js-error-message").text("");
     this.searchTerm = $("#js-search-term").val();
@@ -232,14 +236,19 @@ function watchForm() {
     $(".bich").show();
     $(".med").show();
     getVideos(this.searchTerm);
-    getNews();
+    getNews(this.searchTerm);
     getRecipe(this.searchTerm);
-    $(".text-center").click(function() {
+    $(".text-center").click(function () {
       event.preventDefault();
       $(".welcome").show();
       $("#show-results").hide();
     });
     $("#js-form")[0].reset();
   });
+}
+
+function setFooterYear() {
+  const year = new Date().getFullYear();
+  $(".footer-year").text(year);
 }
 $(watchForm);

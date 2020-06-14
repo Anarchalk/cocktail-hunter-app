@@ -87,6 +87,13 @@ input[type="text"] {
   border-radius: 6px;
 }
 
+.newsBox {
+  overflow: auto;
+  border: 1px solid black;
+  border-radius: 10px;
+  margin: 10px
+}
+
 #go {
   font-size: 13px;
   background-color: rgb(156, 98, 116);
@@ -118,6 +125,7 @@ input[type="text"] {
 li {
   padding-top: 2px;
   padding-bottom: 3px;
+  overflow: auto;
 }
 .ingredientContainer > p {
   margin: 0;
@@ -130,7 +138,8 @@ h3 {
 #imgart {
   float: left;
   margin-right: 15px;
-  height: auto;
+  /* height: auto; */
+  width: 15%;
 }
 
 p,
@@ -183,12 +192,15 @@ ul {
   color: black;
   border-radius: 5px;
   opacity: 0.9;
+  overflow: auto;
+  /* padding-bottom: 20px; */
 }
 
 ul.rResults,
 ul.vResults,
 ul.nResults {
   padding: 0;
+  margin: 0 10px;
 }
 
 ul.rResults,
@@ -197,8 +209,7 @@ ul.nResults {
   margin-right: 10px;
 }
 
-.nResults-li > h4,
-.lineh {
+.nResults-li > h4{
   margin-top: 0;
   margin-bottom: 0;
   line-height: 20px;
